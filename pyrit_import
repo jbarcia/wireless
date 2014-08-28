@@ -1,0 +1,24 @@
+#!/bin/bash
+
+PREFIX="temporarysplitfile-"
+NUMBEROFSPLITS=200
+
+echo "Which file would you like to import?"
+read FILENAME
+echo "Using file $FILENAME"
+
+echo "Splitting file $FILENAME into $NUMBEROFSPLITS parts with prefix $PREFIX."
+split -n $NUMBEROFSPLITS $FILENAME $PREFIX
+echo "File successfully split."
+
+for i in $PREFIX*
+do
+    echo "Importing file $i"
+    pyrit -i $i import_passwords
+    echo "Waiting 15 seconds"
+    sleep 15
+done
+
+echo "Import complete!"
+rm $PREFIX*
+echo "Split files removed."
